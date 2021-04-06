@@ -173,6 +173,7 @@ export default createStore({
       commit('SET_LOADING', true)
       axios.get(baseAPIURL+state.deck.id+'/draw/?count=1')
         .then(data => {
+          reRequests = 0
           if (data.data.success === true) {
             commit('SET_CARD', data.data.cards[0])
             if (state.level === 2) {
