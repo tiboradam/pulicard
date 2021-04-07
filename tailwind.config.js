@@ -7,7 +7,16 @@ module.exports = {
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        'card': '226px',
+        'card-sm': '132px',
+      },
+      height: {
+        'card': '314px',
+        'card-sm': '183px',
+      },
+    },
   },
   variants: {
     extend: {},

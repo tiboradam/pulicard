@@ -6,10 +6,10 @@
       </div>
       <div class="relative flex flex-col h-screen" v-else>
         <div class="fixed flex flex-col items-center justify-center w-full py-4 shadow-md">
-          <div v-if="$store.state.gameStatus === 'initialized'" class="flex gap-2">
-            <button @click="startNewGame" class="btn pushable">New game</button>
+          <div v-if="$store.state.gameStatus === 'initialized'" class="flex">
+            <button @click="startNewGame" class="btn pushable">Start</button>
 
-            <div class="flex items-center gap-4 ml-2 border-l border-gray-400 rounded-md px-4 cursor-default">
+            <div class="flex items-center gap-2 md:gap-4 ml-2 border-l border-gray-400 rounded-md px-4 cursor-default">
               <div @click="selectLevel(0)" class="py-1 px-2 rounded-md flex items-center border hover:bg-gray-200 level pushable" :class="{'selected': level === 0}">
                 <svg viewBox="0 0 24 24" class="w-4">
                   <path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" />
@@ -19,13 +19,13 @@
               <div @click="selectLevel(1)" class="py-1 px-2 rounded-md flex items-center border hover:bg-gray-200 level pushable" :class="{'selected': level === 1}">
                 <svg viewBox="0 0 24 24" class="w-4 text-blue-500">
                   <path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
-                </svg>              
+                </svg>
                 <span class="text-sm ml-1">Normal</span>
               </div>
               <div @click="selectLevel(2)" class="py-1 px-2 rounded-md flex items-center border hover:bg-gray-200 level pushable" :class="{'selected': level === 2}">
                 <svg viewBox="0 0 24 24" class="w-4 text-red-500">
                   <path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
-                </svg>              
+                </svg>
                 <span class="text-sm ml-1">Hard</span>
               </div>
             </div>
@@ -33,33 +33,47 @@
           </div>
           <div v-if="$store.state.gameStatus === 'playing'" class="flex items-center">
             <button @click="endGame" class="btn pushable">End game</button>
-            <div class="ml-4 text-2xl">Deck: {{$store.state.deck.remaining}}</div>
-            <div class="ml-4 text-2xl">Counter: {{decisionCounter}}</div>
+            <div class="ml-4 text-xl sm:text-2xl">Deck: {{$store.state.deck.remaining}}</div>
+            <div class="ml-4 text-xl sm:text-2xl">Counter: {{decisionCounter}}</div>
           </div>
         </div>
-
-        <!-- <pre>
-          {{$store.state.card}}
-        </pre> -->
         
+        <!-- <div v-if="$store.state.gameStatus === 'playing'" class="debug flex flex-col sm:flex-row items-center justify-center mt-20 p-4">
+          <div class="flex flex-row gap-2 w-full" >
+            <div class="bg-blue-400 w-1/2 h-40 ">
+              <div @click="drawCard" class="relative ml-8 px-8 pushable">
+                <img src="/img/card_back.png" class="absolute" :style="{right: (i*3)+'px'}" v-for="i in $store.getters.deckStackCount" :key="i">
+              </div>
+            </div>
+            <div class="bg-green-100 w-1/2">
+              <img :src="$store.state.card.image" v-if="$store.state.card.image" class="w-full"> 
+              <div v-else class="flex items-center justify-center h-44 sm:h-card w-32 sm:w-card font-mono text-9xl text-gray-400 border rounded-xl border-gray-400">
+                ?
+              </div>
+            </div>
+          </div>
+        </div> -->
+
         <transition name="switch" mode="out-in">
           <div v-if="$store.state.gameStatus === 'playing'" class=" flex flex-col sm:flex-row items-center justify-center mt-20 p-4">
-            <div class=" flex flex-row items-center justify-center gap-2" >
-                <div @click="drawCard" class="card stack relative ml-8 px-8 pushable">
-                  <img src="/img/card_back.png" class="absolute " :style="{right: (i*3)+'px'}" v-for="i in $store.getters.deckStackCount" :key="i">
+            <div class="flex flex-row gap-2 w-full" >
+              <div class="relative z-0 w-1/2 h-card-sm sm:h-card ">
+                <div class="absolute inset-0 bg-transparent z-10" v-if="!canChoose">
                 </div>
-
-              <div class="card" >
+                <div @click="drawCard" class="relative ml-8 px-8 pushable">
+                  <img src="/img/card_back.png" class="absolute" :style="{right: (i*3)+'px'}" v-for="i in $store.getters.deckStackCount" :key="i">
+                </div>
+              </div>
+              <div class="h-card-sm sm:h-card w-card-sm sm:w-card">
                 <img :src="$store.state.card.image" v-if="$store.state.card.image" class="w-full"> 
-                <div class="flex items-center justify-center font-mono text-9xl text-gray-400 card border border-gray-400" v-else>
+                <div v-else class="flex items-center justify-center h-full font-mono text-9xl text-gray-400 border rounded-xl border-gray-400">
                   ?
                 </div>
               </div>
-            </div>
+            </div> 
 
-            <div class="relative flex justify-between gap-4 mx-auto p-8 disabed">
+            <div class="relative flex flex-wrap sm:flex-nowrap sm:w-3/4 justify-center gap-2 mt-4 sm:mt-0 mx-auto sm:p-8">
               <div class="absolute inset-0 bg-transparent z-10" v-if="canChoose">
-
               </div>
               <div @click="chooseSlot(slot)" v-for="slot in $store.state.slots" :key="slot.suit" class="relative z-0 card slot flex items-center justify-center" :class="[{'correct': slot.correct === true},{'incorrect': slot.correct === false}]">
                 <img :src="/img/+slot.symbol" class="w-24">
@@ -90,7 +104,7 @@ export default {
   components: {
     Modal,
     Info,
-    Toast
+    Toast,
   },
   data() {
     return {
