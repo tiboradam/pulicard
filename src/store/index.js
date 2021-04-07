@@ -179,11 +179,7 @@ export default createStore({
             if (state.level === 2) {
               commit('SET_SLOTS',ShuffleArray(suits))
             }
-            if (data.data.remaining === 0) {
-              dispatch('shuffleDeck')
-            } else {
-              commit('SET_REMAINING', data.data.remaining)
-            }
+            commit('SET_REMAINING', data.data.remaining)
           } else {
             dispatch('shuffleDeck')
           }
