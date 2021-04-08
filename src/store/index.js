@@ -147,6 +147,7 @@ export default createStore({
           })
           localStorage.setItem('deckid', data.data.deck_id)
           commit('SET_LOADING', false)
+          commit('SET_GAMESTATUS', 'initialized')
         })
         .catch(error => {
           console.log('New deck',error)
