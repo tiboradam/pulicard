@@ -1,1 +1,1 @@
-pip install myst-parser
+myst-parser==0.16.1
